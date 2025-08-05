@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SugDevaa Official Payment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      font-family: 'Share Tech Mono', monospace;
+      background-image: url('https://Download Dark_Character_Background.jpg');
+      color: 	#FFFFFF;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .wrapper {
+      height: 100vh;
+      overflow-y: auto;
+      padding: 80px 20px 40px;
+    }
+
+    .glitch {
+      font-size: 30px;
+      text-align: center;
+      color: 			#AAF0D1;
+      animation: glitch 1s infinite;
+    }
+
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 black, -2px 0 purple; }
+      20% { text-shadow: -2px 0 green, 2px 0 yellow; }
+      40% { text-shadow: 2px 2px white, -2px -2px magenta; }
+      60% { text-shadow: -2px -2px gray, 2px 2px blue; }
+      80% { text-shadow: 0 0 aqua, 0 0 white; }
+      100% { text-shadow: 2px 0 gray, -2px 0 magenta; }
+    }
+
+    .container {
+      backdrop-filter: blur(5px);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      padding: 30px 20px;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+      box-shadow: 0 0 8px rgba(200,200,200,0.4),
+            0 0 16px rgba(180,180,180,0.3),
+            0 0 32px rgba(160,160,160,0.2);
+    }
+
+    .thumbnail {
+      width: 130px;
+      height: 130px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px 		#AAF0D1;
+      margin: 20px auto;
+      display: block;
+    }
+
+    .btn {
+      display: block;
+      background: transparent;
+      border: 2px solid 		#AAF0D1;
+      color: 		#AAF0D1;
+      padding: 12px;
+      width: 100%;
+      margin: 8px 0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      text-align: center;
+    }
+
+    .btn:hover {
+      background: 	#AAF0D1;
+      color: black;
+      transform: scale(1.03);
+    }
+
+    .qris-img,
+    .nomor-box {
+      display: none;
+      margin-top: 15px;
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 0 12px #AAF0D1;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .product-card {
+      margin-top: 25px;
+      border: 1px solid#AAF0D1;
+      padding: 14px;
+      border-radius: 10px;
+      background: rgba(0, 255, 153, 0.05);
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .product-card:hover {
+      transform: scale(1.02);
+      background: linear-gradient(to right, #2C3539, magenta);
+    }
+
+    .product-title {
+      font-size: 1.2em;
+      color: 	#FFFFFF;
+    }
+
+    .price {
+      font-size: 0.9em;
+      margin-top: 5px;
+      color: #AAF0D1;
+    }
+
+    .product-detail {
+      font-size: 0.85em;
+      color: 	#FFFF00;
+      display: none;
+      margin-top: 8px;
+    }
+
+    .note {
+      text-align: center;
+      font-size: 0.9em;
+      margin-top: 10px;
+      color: #999;
+    }
+
+    /* Modern Music Player */
+    .music-player {
+      display: none;
+      background: linear-gradient(135deg, rgba(0,0,0,0.8), rgba(170,240,209,0.1));
+      border: 2px solid #AAF0D1;
+      border-radius: 20px;
+      padding: 25px;
+      margin-top: 20px;
+      text-align: center;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 8px 32px rgba(170, 240, 209, 0.3),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .song-title {
+      color: #AAF0D1;
+      font-size: 1.1em;
+      margin-bottom: 15px;
+      text-shadow: 0 0 10px #AAF0D1;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .music-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid #AAF0D1;
+      margin: 0 auto 20px;
+      animation: spin 20s linear infinite;
+      box-shadow: 0 0 20px rgba(170, 240, 209, 0.5),
+                  inset 0 0 20px rgba(170, 240, 209, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .music-photo:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .timer-display {
+      color: #66ffff;
+      font-size: 1em;
+      margin-bottom: 15px;
+      font-family: 'Share Tech Mono', monospace;
+      text-shadow: 0 0 5px #66ffff;
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #AAF0D1, #00ffff, #AAF0D1);
+      width: 0%;
+      transition: width 0.1s ease;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(170, 240, 209, 0.8);
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 5px rgba(170, 240, 209, 0.5); }
+      to { box-shadow: 0 0 20px rgba(170, 240, 209, 1); }
+    }
+
+    .modern-visualizer {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 3px;
+      height: 50px;
+      margin-top: 15px;
+      padding: 10px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 15px;
+      border: 1px solid rgba(170, 240, 209, 0.3);
+    }
+
+    .modern-bar {
+      width: 5px;
+      background: linear-gradient(to top, #FF1493, #AAF0D1, #00ffff);
+      border-radius: 3px;
+      animation: modernBounce 0.6s infinite ease-in-out;
+      box-shadow: 0 0 8px rgba(170, 240, 209, 0.8);
+      transition: all 0.3s ease;
+    }
+
+    .modern-bar:hover {
+      transform: scaleY(1.2);
+    }
+
+    .modern-bar:nth-child(1) { animation-delay: 0s; height: 25px; }
+    .modern-bar:nth-child(2) { animation-delay: 0.1s; height: 35px; }
+    .modern-bar:nth-child(3) { animation-delay: 0.2s; height: 20px; }
+    .modern-bar:nth-child(4) { animation-delay: 0.3s; height: 40px; }
+    .modern-bar:nth-child(5) { animation-delay: 0.4s; height: 30px; }
+    .modern-bar:nth-child(6) { animation-delay: 0.5s; height: 45px; }
+    .modern-bar:nth-child(7) { animation-delay: 0.6s; height: 25px; }
+    .modern-bar:nth-child(8) { animation-delay: 0.7s; height: 35px; }
+    .modern-bar:nth-child(9) { animation-delay: 0.8s; height: 20px; }
+    .modern-bar:nth-child(10) { animation-delay: 0.9s; height: 30px; }
+
+    @keyframes modernBounce {
+      0%, 100% { 
+        transform: scaleY(0.3) scaleX(1);
+        opacity: 0.7;
+      }
+      50% { 
+        transform: scaleY(1) scaleX(1.1);
+        opacity: 1;
+      }
+    }
+
+    .music-controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .control-btn {
+      background: linear-gradient(135deg, transparent, rgba(170, 240, 209, 0.1));
+      border: 2px solid #AAF0D1;
+      color: #AAF0D1;
+      padding: 10px 15px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1.1em;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .control-btn:hover {
+      background: linear-gradient(135deg, #AAF0D1, #00ffff);
+      color: black;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 6px 12px rgba(170, 240, 209, 0.4);
+    }
+
+    .control-btn:active {
+      transform: translateY(0) scale(0.95);
+    }
+  </style>
+</head>
+<body oncontextmenu="return false" onkeydown="return disableKeys(event)">
+<canvas id="matrixCanvas"></canvas>
+
+<div class="wrapper">
+  <div class="glitch">Halo Selamat Datang Di</div>
+  <div class="glitch">SugDevaa Official Payment</div>
+  <img src="https://files.catbox.moe/m6cnus.jpg" class="thumbnail" />
+
+  <div class="container">
+    <button class="btn" onclick="toggleMusic()">🎵 Play Music</button>
+    
+    
+    <div class="music-player" id="musicPlayer">
+      <div class="song-title">🎶 The 1975 - About You (Official)</div>
+      <img src="https://i.ibb.co.com/jvYsV200/IMG-20250805-091546-894.jpg" class="music-photo" alt="Music Cover" />
+      <div class="timer-display" id="timerDisplay">00:00 / 00:00</div>
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="modern-visualizer">
+        <div class="modern-bar"></div>
+        <div class="modern-bar"></div>
+        <div class="modern-bar"></div>
+        <div class="modern-bar"></div>
+        <div class="modern-bar"></div>
+        <div class="modern-bar"></div>
+        <div class="modern-bar"></div>
+        <div class="modern-bar"></div>
+        <div class="modern-bar"></div>
+        <div class="modern-bar"></div>
+      </div>
+      <div class="music-controls">
+        <button class="control-btn" onclick="restartMusic()">⏭</button>
+        <button class="control-btn" onclick="togglePlayPause()" id="playPauseBtn">Play</button>
+        <button class="control-btn" onclick="stopMusic()">Stop</button>
+      </div>
+    </div>
+
+    <audio id="bgMusic" src="https://files.catbox.moe/sc7g5b.mp3"></audio>
+
+    <!-- Tombol Pembayaran -->
+    <button class="btn" onclick="toggleQRIS()">Tampilkan QRIS</button>
+    <img id="qrisImage" class="qris-img" src="https://files.catbox.moe/c3pjrc.jpg" alt="QRIS Sugaa" />
+
+    <button class="btn" onclick="toggleDana()">Dana</button>
+    <div id="danaBox" class="nomor-box">Nomor Dana: <strong>08572</strong></div>
+
+    <button class="btn" onclick="toggleGopay()">Not Found</button>
+    <div id="gopayBox" class="nomor-box">Not Found</div>
+
+    <div class="note">Atas Nama: <strong>Muach</strong></div>
+    <div class="note">Minat? Chat Tele: <strong>t.me/SugDevaa</strong></div>
+    <div class="note">Limit? Chat Bot Tele: <strong>t.me/SugNotDeveloper_Bot</strong></div>
+
+    <!-- Produk -->
+    <div class="product-card" onclick="toggleDetail(this)">
+      <div class="product-title">SugaDevaa Store</div>
+      <div class="price"></div>
+      <div class="product-detail">
+        Toko layanan script & Function Bug Order via admin
+      </div>
+    </div>
+
+    <div class="product-card" onclick="toggleDetail(this)">
+      <div class="product-title">Script Nika V14</div>
+      <div class="price">Rp35.000</div>
+      <div class="product-detail">
+        Bot Bug WhatsApp. Name Script : Nika Sun God.
+      </div>
+    </div>
+
+    <div class="product-card" onclick="toggleDetail(this)">
+      <div class="product-title">Partner Sugaa Biasa</div>
+      <div class="price">Rp15.000</div>
+      <div class="product-detail">
+        Benefit : Dapatkan Base Noenc, Function Terbaru, Jual Pt Biasa, Mt Update Tiap Hari
+      </div>
+    </div>
+
+    <div class="product-card" onclick="toggleDetail(this)">
+      <div class="product-title">Partnert Pribadi Sugaa</div>
+      <div class="price">Rp30.000</div>
+      <div class="product-detail">
+        Benefit: Urus Buyer All, Function Terbaru, Jadi SVIP, Get Base, Full Tutor, Tools Crack Script
+      </div>
+    </div>
+
+    <div class="product-card" onclick="toggleDetail(this)">
+      <div class="product-title">Jasa Bikin Web</div>
+      <div class="price">Rp10.000</div>
+      <div class="product-detail">
+        Tampilan Auto Bagus, Bisa Request, Bisa Req Domain
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleDetail(card) {
+    const detail = card.querySelector('.product-detail');
+    detail.style.display = detail.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function toggleQRIS() {
+    const img = document.getElementById('qrisImage');
+    img.style.display = img.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function toggleDana() {
+    const danaBox = document.getElementById('danaBox');
+    danaBox.style.display = danaBox.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function toggleGopay() {
+    const gopayBox = document.getElementById('gopayBox');
+    gopayBox.style.display = gopayBox.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function disableKeys(e) {
+    if (
+      e.key === 'F12' ||
+      (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+      (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+      (e.ctrlKey && e.key === 'U')
+    ) {
+      return false;
+    }
+  }
+
+  // Enhanced Music Player
+  const music = document.getElementById('bgMusic');
+  const musicPlayer = document.getElementById('musicPlayer');
+  const timerDisplay = document.getElementById('timerDisplay');
+  const progressBar = document.getElementById('progressBar');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  let isPlaying = false;
+
+  function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  function updateProgress() {
+    if (music.duration) {
+      const progress = (music.currentTime / music.duration) * 100;
+      progressBar.style.width = progress + '%';
+      timerDisplay.textContent = `${formatTime(music.currentTime)} / ${formatTime(music.duration)}`;
+    }
+  }
+
+  function toggleMusic() {
+    if (!isPlaying) {
+      music.play().then(() => {
+        musicPlayer.style.display = 'block';
+        playPauseBtn.textContent = '⭔';
+        isPlaying = true;
+      }).catch(e => console.log('Playback failed:', e));
+    } else {
+      music.pause();
+      musicPlayer.style.display = 'none';
+      playPauseBtn.textContent = '⬢';
+      isPlaying = false;
+    }
+  }
+
+  function togglePlayPause() {
+    if (music.paused) {
+      music.play();
+      playPauseBtn.textContent = '⭔';
+    } else {
+      music.pause();
+      playPauseBtn.textContent = '⬢';
+    }
+  }
+
+  function restartMusic() {
+    music.currentTime = 0;
+    if (music.paused) {
+      music.play();
+      playPauseBtn.textContent = '⭔';
+    }
+  }
+
+  function stopMusic() {
+    music.pause();
+    music.currentTime = 0;
+    musicPlayer.style.display = 'none';
+    playPauseBtn.textContent = '⬢';
+    isPlaying = false;
+  }
+
+  // Event listeners
+  music.addEventListener('timeupdate', updateProgress);
+  music.addEventListener('loadedmetadata', updateProgress);
+  music.addEventListener('ended', stopMusic);
+
+  // Matrix Effect
+  const canvas = document.getElementById('matrixCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+  const letters = "SugDevaa×VoidNotDevv";
+  const fontSize = 16;
+  const columns = canvas.width / fontSize;
+  const drops = Array(Math.floor(columns)).fill(1);
+
+  function drawMatrix() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters[Math.floor(Math.random() * letters.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+        drops[i] = 0;
+      drops[i]++;
+    }
+  }
+  setInterval(drawMatrix, 50);
+</script>
+
+</body>
+</html>
